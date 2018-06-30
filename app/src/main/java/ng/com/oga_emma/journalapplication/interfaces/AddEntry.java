@@ -1,16 +1,21 @@
 package ng.com.oga_emma.journalapplication.interfaces;
 
+import ng.com.oga_emma.journalapplication.model.JournalEntryRoom;
+
 public interface AddEntry {
 
-    interface View{
-
+    public interface AddEntryListener{
+        void onEntryAddSuccess();
+        void onEntryAddFail();
     }
 
-    interface Presenter{
-
+    public interface UpdateEntryListener{
+        void onUpdateEntrySuccess();
+        void onUpdateEntryFail();
     }
 
-    interface Repository{
-
+    public interface DeleteEntryListener{
+        void onDeleteEntrySuccess();
+        void onDeleteEntryFail();
     }
 }

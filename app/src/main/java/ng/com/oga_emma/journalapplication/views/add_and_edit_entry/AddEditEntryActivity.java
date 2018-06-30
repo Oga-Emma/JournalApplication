@@ -1,10 +1,7 @@
-package ng.com.oga_emma.journalapplication.views;
+package ng.com.oga_emma.journalapplication.views.add_and_edit_entry;
 
-import android.content.Intent;
-import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 
 import ng.com.oga_emma.journalapplication.R;
 
@@ -20,6 +17,6 @@ public class AddEditEntryActivity extends AppCompatActivity {
                 .replace(R.id.container, new AddEditFragment())
                 .commit();
 
-        setTitle("New Entry");
+        setTitle("New Journal Entry");
     }
 }

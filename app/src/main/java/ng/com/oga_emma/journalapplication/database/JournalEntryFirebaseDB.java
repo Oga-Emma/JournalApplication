@@ -1,4 +1,4 @@
-package ng.com.oga_emma.journalapplication.repositories;
+package ng.com.oga_emma.journalapplication.database;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -12,48 +12,55 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
+import ng.com.oga_emma.journalapplication.interfaces.AddEntry;
 import ng.com.oga_emma.journalapplication.interfaces.Entry;
 import ng.com.oga_emma.journalapplication.model.JournalEntry;
 
 import static ng.com.oga_emma.journalapplication.utils.FirebaseStringUtils.JOURNAL_ENTRY_NODE;
 import static ng.com.oga_emma.journalapplication.utils.FirebaseStringUtils.USER_NODE;
 
-public class JournalEntryRepo implements Entry.Repository {
+public class JournalEntryFirebaseDB implements Entry.Repository {
 
-    private String TAG = JournalEntryRepo.class.getSimpleName();
+    private String TAG = JournalEntryFirebaseDB.class.getSimpleName();
 
-    private static JournalEntryRepo repository;
+    private static JournalEntryFirebaseDB repository;
 
     private ChildEventListener childEventListener = null;
     private ValueEventListener singleValueEventListener = null;
 
+    private ValueEventListener valueEventListeners[];
+
     final FirebaseDatabase database;
     private DatabaseReference ref = null;
 
-    private JournalEntryRepo(String userId) {
+    private JournalEntryFirebaseDB(String userId) {
         this.database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference(USER_NODE).child(userId);
+        ref = database.getReference(USER_NODE).child(userId).child(JOURNAL_ENTRY_NODE);
+
     }
 
-    public static JournalEntryRepo getInstance(String userId) {
+    public static JournalEntryFirebaseDB getInstance(String userId) {
         if (repository == null)
-            repository = new JournalEntryRepo(userId);
+            repository = new JournalEntryFirebaseDB(userId);
 
         return repository;
     }
 
 
     @Override
-    public void fetchJournalEntries(final Entry.JournalEntriesFetchListener listener) {
+    public void fetchJournalEntries(final Entry.JournalEntriesFetchOnceListener listener) {
+
+        Log.i(TAG, "got here waiting for data");
+
         if (singleValueEventListener == null) {
             singleValueEventListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
 
-                    Map<String, JournalEntry> entryMap = new HashMap<>();
+                    Map<String, JournalEntry> entryMap = new LinkedHashMap<>();
 
                     Log.i(TAG, "datasnapshot size: " + snapshot.getChildrenCount());
 
@@ -62,7 +69,8 @@ public class JournalEntryRepo implements Entry.Repository {
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                         entry = postSnapshot.getValue(JournalEntry.class);
 
-                        entryMap.put(entry.getId(), entry);
+                        if(entry != null)
+                            entryMap.put(entry.getUUID(), entry);
                     }
 
                     listener.onJournalEntryFetchSuccess(entryMap);
@@ -76,8 +84,7 @@ public class JournalEntryRepo implements Entry.Repository {
             };
         }
 
-        ref.child(JOURNAL_ENTRY_NODE)
-                .addListenerForSingleValueEvent(singleValueEventListener);
+        ref.addValueEventListener(singleValueEventListener);
     }
 
     @Override
@@ -138,45 +145,43 @@ public class JournalEntryRepo implements Entry.Repository {
                 }
             };
 
-            ref.child(JOURNAL_ENTRY_NODE)
-                    .addChildEventListener(childEventListener);
-
+            ref.addChildEventListener(childEventListener);
         }
     }
 
     @Override
-    public void addJournalEntry(JournalEntry entry) {
-        ref.child("journal_entries").child(entry.getId()).setValue(entry)
+    public void addJournalEntry(JournalEntry entry, AddEntry.AddEntryListener listener) {
+        ref.child(entry.getUUID()).setValue(entry)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-//                        listener.onEntryAddSuccess();
+                        listener.onEntryAddSuccess();
                         Log.i(TAG, "Entry added successfully");
                     }
                 }).addOnFailureListener(new OnFailureListener() {
 
             @Override
             public void onFailure(@NonNull Exception e) {
-//                listener.onEntryAddFailure(e);
+                listener.onEntryAddFail();
                 Log.e(TAG, e.getMessage(), e);
             }
         });
     }
 
     @Override
-    public void updateJournalEntry(JournalEntry entry) {
-        ref.child("journal_entries").child(entry.getId()).setValue(entry)
+    public void updateJournalEntry(JournalEntry entry, AddEntry.UpdateEntryListener listener) {
+        ref.child(entry.getUUID()).setValue(entry)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-//                        listener.onEntryAddSuccess();
+                        listener.onUpdateEntrySuccess();
                         Log.i(TAG, "Entry added successfully");
                     }
                 }).addOnFailureListener(new OnFailureListener() {
 
             @Override
             public void onFailure(@NonNull Exception e) {
-//                listener.onEntryAddFailure(e);
+                listener.onUpdateEntryFail();
                 Log.e(TAG, e.getMessage(), e);
             }
         });
@@ -184,25 +189,26 @@ public class JournalEntryRepo implements Entry.Repository {
     }
 
     @Override
-    public void deleteJournalEntry(JournalEntry entry) {
-        ref.child("journal_entries").child(entry.getId()).removeValue()
+    public void deleteJournalEntry(JournalEntry entry, AddEntry.DeleteEntryListener listener) {
+        ref.child(entry.getUUID()).removeValue()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-//                        listener.onEntryAddSuccess();
+                        listener.onDeleteEntrySuccess();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
 
             @Override
             public void onFailure(@NonNull Exception e) {
-//                listener.onEntryAddFailure(e);
+                listener.onDeleteEntryFail();
                 Log.e(TAG, e.getMessage(), e);
             }
         });
 
     }
 
-    public void clearListners() {
+    public void clearListeners() {
+
         if (null != childEventListener) {
             ref.child(JOURNAL_ENTRY_NODE).removeEventListener(childEventListener);
             childEventListener = null;

@@ -27,10 +27,15 @@ public interface Entry {
 
     interface Repository{
         void setupFirebaseChildEventListeners(JournalEntriesFetchListener listener);
-        void fetchJournalEntries(JournalEntriesFetchListener listener);
-        void addJournalEntry(JournalEntry entry);
-        void updateJournalEntry(JournalEntry entry);
-        void deleteJournalEntry(JournalEntry entry);
+        void fetchJournalEntries(JournalEntriesFetchOnceListener listener);
+        void addJournalEntry(JournalEntry entry, AddEntry.AddEntryListener listener);
+        void updateJournalEntry(JournalEntry entry, AddEntry.UpdateEntryListener listener);
+        void deleteJournalEntry(JournalEntry entry, AddEntry.DeleteEntryListener listener);
+    }
+
+    interface JournalEntriesFetchOnceListener{
+        void onJournalEntryFetchFailed();
+        void onJournalEntryFetchSuccess(Map<String, JournalEntry> entryMap);
     }
 
     interface JournalEntriesFetchListener{
