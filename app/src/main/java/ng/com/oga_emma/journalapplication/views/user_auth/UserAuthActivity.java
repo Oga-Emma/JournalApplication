@@ -42,12 +42,8 @@ public class UserAuthActivity extends AppCompatActivity implements View.OnClickL
         }else if(view.getId() == R.id.phone_login_button){
             startActivity(new Intent(UserAuthActivity.this, PhoneNumberSigninActivity.class));
             finish();
+
         }else if(view.getId() == R.id.ananoymous_sign_in_btn){
-
-            PreferenceManager.getDefaultSharedPreferences(this)
-                    .edit().putInt(SharePreferenceKeys.SIGNIN_MODE, SigninMode.LOCAL)
-                    .apply();
-
             MainActivity.launchActivity(UserAuthActivity.this);
             finish();
         }

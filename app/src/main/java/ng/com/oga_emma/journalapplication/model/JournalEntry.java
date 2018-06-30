@@ -2,6 +2,8 @@ package ng.com.oga_emma.journalapplication.model;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.Date;
 import java.util.UUID;

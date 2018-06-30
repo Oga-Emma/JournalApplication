@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingBottom="8dp">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/imageView"
@@ -46,7 +45,9 @@
         android:id="@+id/entry_body_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:ellipsize="end"
@@ -56,7 +57,7 @@
         android:padding="8dp"
         android:text="News is information about current events. News is provided through many different media: word of mouth, printing, postal systems, broadcasting, electronic communication, and also on the testimony of observers and witnesses to events."
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        app:layout_constraintEnd_toEndOf="@+id/date_tv"
+        app:layout_constraintEnd_toStartOf="@+id/delete_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/entry_title_tv" />
 
@@ -65,10 +66,23 @@
         android:layout_height="1dp"
         android:layout_marginTop="8dp"
         android:background="@color/colorPrimary"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/entry_body_tv">
 
     </FrameLayout>
+
+    <ImageButton
+        android:id="@+id/delete_button"
+        android:layout_width="50dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/holo_red_dark"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/date_tv"
+        app:srcCompat="@drawable/ic_delete_black_24dp" />
 
 </android.support.constraint.ConstraintLayout>

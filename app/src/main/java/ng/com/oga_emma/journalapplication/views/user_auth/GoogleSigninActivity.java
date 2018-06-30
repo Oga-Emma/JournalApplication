@@ -1,10 +1,10 @@
 package ng.com.oga_emma.journalapplication.views.user_auth;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -42,17 +42,7 @@ public class GoogleSigninActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.auth_google_signin_activity);
 
-
         FirebaseApp.initializeApp(this);
-
-        // Views
-/*        mStatusTextView = findViewById(R.id.status);
-        mDetailTextView = findViewById(R.id.detail);*/
-
-/*
-        findViewById(R.id.sign_out_button).setOnClickListener(this);
-        findViewById(R.id.disconnect_button).setOnClickListener(this);
-*/
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -131,15 +121,13 @@ public class GoogleSigninActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser user) {
         if (user != null) {
-            startActivity(new Intent(GoogleSigninActivity.this, MainActivity.class));
+            MainActivity.launchActivity(this);
             finish();
         } else {
             //error signing in
             Toast.makeText(this, "Error signing in", Toast.LENGTH_LONG).show();
-
-            Intent intent = new Intent(this, UserAuthActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+            startActivity(new Intent(this, UserAuthActivity.class));
+            finish();
         }
 
     }

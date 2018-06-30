@@ -31,8 +31,6 @@ public class JournalEntryFirebaseDB implements Entry.Repository {
     private ChildEventListener childEventListener = null;
     private ValueEventListener singleValueEventListener = null;
 
-    private ValueEventListener valueEventListeners[];
-
     final FirebaseDatabase database;
     private DatabaseReference ref = null;
 
@@ -204,7 +202,6 @@ public class JournalEntryFirebaseDB implements Entry.Repository {
                 Log.e(TAG, e.getMessage(), e);
             }
         });
-
     }
 
     public void clearListeners() {

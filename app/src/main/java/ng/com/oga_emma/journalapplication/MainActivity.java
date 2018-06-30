@@ -22,7 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import ng.com.oga_emma.journalapplication.utils.SharePreferenceKeys;
 import ng.com.oga_emma.journalapplication.views.add_and_edit_entry.AddEditEntryActivity;
-import ng.com.oga_emma.journalapplication.views.JournalEntriesFragment;
+import ng.com.oga_emma.journalapplication.views.entry_list.JournalEntriesFragment;
 import ng.com.oga_emma.journalapplication.views.user_auth.UserAuthActivity;
 
 public class MainActivity extends AppCompatActivity{
@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity{
 
     public static void launchActivity(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.putExtra(NEW_SIGN_IN, true);
 
         context.startActivity(intent);
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity{
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
+
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         mAuth = FirebaseAuth.getInstance();

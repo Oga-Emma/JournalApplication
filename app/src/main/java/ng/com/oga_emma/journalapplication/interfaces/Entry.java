@@ -46,4 +46,9 @@ public interface Entry {
 
         void onJournalEntryFetchSuccess(Map<String, JournalEntry> entryMap);
     }
+
+    interface EntryInteractionListener {
+        void onEntryClicked(JournalEntry entry);
+        void onEntryDeleted(JournalEntry entry);
+    }
 }
