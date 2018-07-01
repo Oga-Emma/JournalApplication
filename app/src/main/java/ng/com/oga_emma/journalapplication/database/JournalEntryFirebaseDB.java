@@ -1,5 +1,6 @@
 package ng.com.oga_emma.journalapplication.database;
 
+import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -13,6 +14,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import ng.com.oga_emma.journalapplication.interfaces.AddEntry;
@@ -70,6 +72,18 @@ public class JournalEntryFirebaseDB implements Entry.Repository {
                         if(entry != null)
                             entryMap.put(entry.getUUID(), entry);
                     }
+
+                    LiveData<List<JournalEntry>> listLiveData = new LiveData<List<JournalEntry>>() {
+                        @Override
+                        protected void setValue(List<JournalEntry> value) {
+                            super.setValue(value);
+                        }
+
+                        @Override
+                        protected void postValue(List<JournalEntry> value) {
+                            super.postValue(value);
+                        }
+                    };
 
                     listener.onJournalEntryFetchSuccess(entryMap);
                 }

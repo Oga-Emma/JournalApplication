@@ -172,7 +172,6 @@ public class JournalEntriesFragment extends Fragment implements Entry.EntryInter
                 @Override
                 public void onJournalEntryFetchSuccess(Map<String, JournalEntry> entryMap) {
                     journalEntryList.clear();
-
                     journalEntryList.addAll(entryMap.values());
                     refreshUi();
                 }
