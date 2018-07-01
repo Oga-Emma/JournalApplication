@@ -8,4 +8,26 @@
     <string name="action_about">About</string>
 
     <string name="entry_count">All Entries [%1$d].</string>
+
+    <string name="no_title_placeholder">No title</string>
+    <string name="cannot_save_empt_document_error_label">Cannot save empty documents, please make and Entry to save</string>
+    <string name="entry_saved_msg">Entry saved</string>
+    <string name="error_saving_entry_msg">Error saving Entry</string>
+    <string name="view_journal_activity_title">JOURNAL ENTRY</string>
+    <string name="signing_out_message">Signing out, please wait</string>
+    <string name="error_fetching_data_from_firebase_message">Error fetching data, please check your network and try again</string>
+    <string name="error_removing_entry_msg">Error removing entry</string>
+    <string name="offline_mode_button_label">Offline mode</string>
+    <string name="google_signin_button_label">Google Signin</string>
+    <string name="journal_title_label">MY JOURNAL</string>
+    <string name="journal_image_content_description">journal image</string>
+    <string name="signing_in_please_wait_label">Signing in please wait</string>
+    <string name="new_entry_marker_image">New entry marker</string>
+    <string name="delete_entry_imagebutton">Delete entry imagebutton</string>
+    <string name="title_hint">Title</string>
+    <string name="new_entry_hint">New entry</string>
+    <string name="save_entry_button_label">SAVE ENTRY</string>
+    <string name="no_entry_message_label">No entry to show  press the + button below to begin</string>
+    <string name="loading_entries_spinner_message">Loading entries</string>
+    <string name="hello_greeting_label">Hello</string>
 </resources>

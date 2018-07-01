@@ -19,7 +19,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
 
 import ng.com.oga_emma.journalapplication.utils.SharePreferenceKeys;
 import ng.com.oga_emma.journalapplication.views.add_and_edit_entry.AddEditEntryActivity;
@@ -36,7 +35,7 @@ public class MainActivity extends AppCompatActivity{
 
     private GoogleSignInClient mGoogleSignInClient;
 
-    private ProgressDialog signinOutDialog;
+    private ProgressDialog mSigninOutDialog;
 
     public static void launchActivity(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -50,7 +49,7 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         setupFAB();
@@ -60,9 +59,9 @@ public class MainActivity extends AppCompatActivity{
         mAuth = FirebaseAuth.getInstance();
         if(mAuth.getCurrentUser() != null) initFirebase();
 
-        signinOutDialog = new ProgressDialog(this);
-        signinOutDialog.setCancelable(false);
-        signinOutDialog.setMessage("Signing out, please wait...");
+        mSigninOutDialog = new ProgressDialog(this);
+        mSigninOutDialog.setCancelable(false);
+        mSigninOutDialog.setMessage(getString(R.string.signing_out_message));
 
         Bundle extras = getIntent().getExtras();
         if(extras != null && extras.containsKey(NEW_SIGN_IN))
@@ -87,16 +86,8 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void setupFAB() {
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();*/
-
-                startActivity(new Intent(MainActivity.this, AddEditEntryActivity.class));
-            }
-        });
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(view -> startActivity(new Intent(MainActivity.this, AddEditEntryActivity.class)));
     }
 
     @Override
@@ -118,11 +109,11 @@ public class MainActivity extends AppCompatActivity{
             return true;
         }else if (id == R.id.action_logout) {
 
-            signinOutDialog.show();
+            mSigninOutDialog.show();
 
             if(mAuth.getCurrentUser() == null) {
 
-                signinOutDialog.dismiss();
+                mSigninOutDialog.dismiss();
 
                 startActivity(new Intent(this, UserAuthActivity.class));
                 finish();
@@ -148,18 +139,15 @@ public class MainActivity extends AppCompatActivity{
         mAuth.signOut();
 
         mGoogleSignInClient.signOut()
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
+                .addOnCompleteListener(this, task -> {
 
-                        signinOutDialog.dismiss();
+                    mSigninOutDialog.dismiss();
 
-                        startActivity(new Intent(MainActivity.this, UserAuthActivity.class));
+                    startActivity(new Intent(MainActivity.this, UserAuthActivity.class));
 
-                        // Google sign out
-                        mGoogleSignInClient.revokeAccess();
-                        finish();
-                    }
+                    // Google sign out
+                    mGoogleSignInClient.revokeAccess();
+                    finish();
                 });
 
     }

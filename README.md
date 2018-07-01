@@ -5,5 +5,7 @@ Google ALC 3.0 Challenge #2
 - google signin
 - offline mode
 
+Link to Apk = (http://link.com)
+
 
 

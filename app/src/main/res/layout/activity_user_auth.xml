@@ -49,12 +49,13 @@
         android:background="@drawable/add_entry_btn_background"
         android:drawablePadding="8dp"
         android:drawableRight="@drawable/ic_right_arrow"
-        android:text="Offline mode"
+        android:text="@string/offline_mode_button_label"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@android:color/background_light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/google_signin_button"
-        app:layout_constraintStart_toStartOf="@+id/google_signin_button" />
+        app:layout_constraintStart_toStartOf="@+id/google_signin_button"
+        android:drawableEnd="@drawable/ic_right_arrow" />
 
     <Button
         android:id="@+id/google_signin_button"
@@ -70,12 +71,15 @@
         android:drawableLeft="@drawable/ic_google"
         android:drawablePadding="8dp"
         android:drawableRight="@drawable/ic_right_arrow"
-        android:text="Google Signin"
+        android:text="@string/google_signin_button_label"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@android:color/background_light"
         app:layout_constraintBottom_toTopOf="@+id/ananoymous_sign_in_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="NewApi"
+        android:drawableStart="@drawable/ic_google"
+        android:drawableEnd="@drawable/ic_right_arrow" />
 
     <TextView
         android:id="@+id/textView13"
@@ -88,7 +92,7 @@
         android:layout_marginTop="16dp"
         android:focusable="true"
         android:gravity="center"
-        android:text="MY JOURNAL"
+        android:text="@string/journal_title_label"
         android:textAppearance="@style/TextAppearance.AppCompat.Display2"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="36sp"
@@ -111,6 +115,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/frameLayout22"
-        app:srcCompat="@drawable/journal_image" />
+        app:srcCompat="@drawable/journal_image"
+        android:contentDescription="@string/journal_image_content_description" />
 
 </android.support.constraint.ConstraintLayout>

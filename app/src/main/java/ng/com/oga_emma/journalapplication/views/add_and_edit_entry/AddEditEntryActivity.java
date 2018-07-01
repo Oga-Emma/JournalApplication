@@ -6,13 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import ng.com.oga_emma.journalapplication.R;
-import ng.com.oga_emma.journalapplication.model.JournalEntry;
 import ng.com.oga_emma.journalapplication.model.JournalEntryRoom;
 
 public class AddEditEntryActivity extends AppCompatActivity {
 
     public static final String ENTRY_EXTRA = "enry_extra";
-    private JournalEntryRoom entry;
+    private JournalEntryRoom mEntry;
 
     public static void launchActivity(Context context, JournalEntryRoom entry){
         Intent intent = new Intent(context, AddEditEntryActivity.class);
@@ -27,37 +26,35 @@ public class AddEditEntryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_edit_entry_activity);
 
-        setTitle("VIEW JOURNAL");
+        setTitle(getString(R.string.view_journal_activity_title));
 
         if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        AddEditFragment fragment = null;
+        AddEditFragment mFragment;
 
         if(savedInstanceState != null && savedInstanceState.containsKey(ENTRY_EXTRA)){
-            entry = savedInstanceState.getParcelable(ENTRY_EXTRA);
-            fragment = AddEditFragment.newInstance(entry);
+            mEntry = savedInstanceState.getParcelable(ENTRY_EXTRA);
+            mFragment = AddEditFragment.newInstance(mEntry);
 
         }else if(getIntent().getExtras() != null && getIntent().getExtras().containsKey(ENTRY_EXTRA)){
-            entry = getIntent().getExtras().getParcelable(ENTRY_EXTRA);
-            fragment = AddEditFragment.newInstance(entry);
+            mEntry = getIntent().getExtras().getParcelable(ENTRY_EXTRA);
+            mFragment = AddEditFragment.newInstance(mEntry);
         }else{
-            fragment = AddEditFragment.newInstance(null);
+            mFragment = AddEditFragment.newInstance(null);
         }
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.container, fragment)
+                .replace(R.id.container, mFragment)
                 .commit();
-
-        setTitle("New Journal Entry");
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        if(entry != null)
-            outState.putParcelable(ENTRY_EXTRA, entry);
+        if(mEntry != null)
+            outState.putParcelable(ENTRY_EXTRA, mEntry);
     }
 }

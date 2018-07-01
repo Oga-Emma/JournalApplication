@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="No entry to show\n\npress the + button below to begin"
+        android:text="@string/no_entry_message_label"
         android:visibility="gone" />
 
     <LinearLayout
@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Loading entries" />
+            android:text="@string/loading_entries_spinner_message" />
     </LinearLayout>
 
     <android.support.constraint.ConstraintLayout
@@ -56,12 +56,10 @@
                     android:id="@+id/textView10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Draft [5]"
+                    tools:text="Draft [5]"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                     android:textColor="@color/colorPrimaryDark"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toTopOf="@+id/entry_count_text_view"
-                    app:layout_constraintEnd_toEndOf="@+id/entry_count_text_view" />
+                    android:visibility="gone" />
 
                 <FrameLayout
                     android:id="@+id/frameLayout"
@@ -88,7 +86,7 @@
                         android:id="@+id/weekday_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Wednesday,"
+                        tools:text="Wednesday,"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="@+id/date_text_view"
@@ -101,7 +99,7 @@
                         android:layout_marginLeft="32dp"
                         android:layout_marginStart="32dp"
                         android:layout_marginTop="16dp"
-                        android:text="Hello"
+                        android:text="@string/hello_greeting_label"
                         android:textSize="30sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -112,7 +110,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="24dp"
                         android:layout_marginRight="24dp"
-                        android:text="June 27 2018"
+                        tools:text="June 27 2018"
                         android:textSize="12sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/weekday_text_view" />
@@ -137,7 +135,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
                         android:layout_marginRight="8dp"
-                        android:text="Emmanuel"
+                        tools:text="Emmanuel"
                         android:textAppearance="@style/TextAppearance.AppCompat.Title"
                         android:textSize="30sp"
                         app:layout_constraintEnd_toStartOf="@+id/entry_count_text_view"
