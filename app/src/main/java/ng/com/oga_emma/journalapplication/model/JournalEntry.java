@@ -30,7 +30,7 @@ public class JournalEntry {
     }
 
     public JournalEntry(JournalEntryRoom journalEntryRoom) {
-        this.UUID = journalEntryRoom.getId() + "";
+        this.UUID = Integer.toString(journalEntryRoom.getId());
         this.entryTitle = journalEntryRoom.getEntryTitle();
         this.entryBody = journalEntryRoom.getEntryBody();
         this.entryDate = journalEntryRoom.getEntryDate().getTime();

@@ -21,6 +21,7 @@ import java.util.Date;
 
 import ng.com.oga_emma.journalapplication.MainActivity;
 import ng.com.oga_emma.journalapplication.R;
+import ng.com.oga_emma.journalapplication.dao.EntryDAO;
 import ng.com.oga_emma.journalapplication.database.JounalEntryLocalStroage;
 import ng.com.oga_emma.journalapplication.database.JournalEntryFirebaseDB;
 import ng.com.oga_emma.journalapplication.interfaces.AddEntry;
@@ -134,23 +135,26 @@ public class AddEditFragment extends Fragment {
                                         Toast.makeText(getContext(), "Error saving entry", Toast.LENGTH_SHORT).show();
                                     }
                                 });
+                    }else {
+
+                        JournalEntryFirebaseDB.getInstance(FirebaseAuth.getInstance().getUid())
+                                .addJournalEntry(new JournalEntry(title, body, date), new AddEntry.AddEntryListener() {
+                                    @Override
+                                    public void onEntryAddSuccess() {
+                                        Toast.makeText(getContext(), "Entry saved", Toast.LENGTH_SHORT).show();
+                                        getActivity().finish();
+                                    }
+
+                                    @Override
+                                    public void onEntryAddFail() {
+                                        Toast.makeText(getContext(), "Error saving entry", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                     }
 
-                    JournalEntryFirebaseDB.getInstance(FirebaseAuth.getInstance().getUid())
-                            .addJournalEntry(new JournalEntry(title, body, date), new AddEntry.AddEntryListener() {
-                                @Override
-                                public void onEntryAddSuccess() {
-                                    Toast.makeText(getContext(), "Entry saved", Toast.LENGTH_SHORT).show();
-                                    getActivity().finish();
-                                }
-
-                                @Override
-                                public void onEntryAddFail() {
-                                    Toast.makeText(getContext(), "Error saving entry", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-
                 }else {
+
+                    EntryDAO entryDAO = JounalEntryLocalStroage.getInstance(getContext().getApplicationContext()).entryDAO();
 
                     if(entry != null){
 
@@ -158,23 +162,21 @@ public class AddEditFragment extends Fragment {
                         entry.setEntryBody(body);
                         entry.setEntryDate(date);
 
-                        JounalEntryLocalStroage.getInstance(getContext().getApplicationContext())
-                                .entryDAO().updateEntry(entry);
-
-                        Toast.makeText(getContext(), "Entry saved", Toast.LENGTH_SHORT).show();
+                        entryDAO.updateEntry(entry);
                         getActivity().finish();
 
                     }else {
-                        JounalEntryLocalStroage.getInstance(getContext().getApplicationContext())
-                                .entryDAO().insertEntry(new JournalEntryRoom(title, body, date));
 
-                        Toast.makeText(getContext(), "Entry saved", Toast.LENGTH_SHORT).show();
+                        entryDAO.insertEntry(new JournalEntryRoom(title, body, date));
                         getActivity().finish();
                     }
+
+                    Toast.makeText(getContext(), "Entry saved", Toast.LENGTH_SHORT).show();
                 }
 
             }else{
-                Toast.makeText(getContext(), "You have not made any entry", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Cannot save empty documents, " +
+                        "please make and entry to save", Toast.LENGTH_SHORT).show();
             }
         }
     };

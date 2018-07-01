@@ -23,7 +23,6 @@ public class UserAuthActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_user_auth);
 
         findViewById(R.id.google_signin_button).setOnClickListener(this);
-        findViewById(R.id.phone_login_button).setOnClickListener(this);
         findViewById(R.id.ananoymous_sign_in_btn).setOnClickListener(this);
 
         if(FirebaseAuth.getInstance().getCurrentUser() != null || PreferenceManager.getDefaultSharedPreferences(this)
@@ -38,10 +37,6 @@ public class UserAuthActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View view) {
         if(view.getId() == R.id.google_signin_button){
             startActivity(new Intent(UserAuthActivity.this, GoogleSigninActivity.class));
-
-        }else if(view.getId() == R.id.phone_login_button){
-            startActivity(new Intent(UserAuthActivity.this, PhoneNumberSigninActivity.class));
-            finish();
 
         }else if(view.getId() == R.id.ananoymous_sign_in_btn){
             MainActivity.launchActivity(UserAuthActivity.this);

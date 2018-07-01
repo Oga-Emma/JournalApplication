@@ -81,9 +81,6 @@ public class GoogleSigninActivity extends AppCompatActivity {
     // [START auth_with_google]
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
-
-        showProgressDialog();
-
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -100,18 +97,8 @@ public class GoogleSigninActivity extends AppCompatActivity {
                             Snackbar.make(findViewById(R.id.main_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
                             updateUI(null);
                         }
-
-                        hideProgressDialog();
                     }
                 });
-    }
-
-    private void hideProgressDialog() {
-
-    }
-
-    private void showProgressDialog() {
-
     }
 
     private void signIn() {

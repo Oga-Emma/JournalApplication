@@ -18,6 +18,7 @@ public class AddEditEntryActivity extends AppCompatActivity {
         Intent intent = new Intent(context, AddEditEntryActivity.class);
         intent.putExtra(ENTRY_EXTRA, entry);
 
+
         context.startActivity(intent);
     }
 
@@ -25,6 +26,12 @@ public class AddEditEntryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_edit_entry_activity);
+
+        setTitle("VIEW JOURNAL");
+
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         AddEditFragment fragment = null;
 

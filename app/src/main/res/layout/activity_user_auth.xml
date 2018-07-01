@@ -8,17 +8,50 @@
     android:theme="@style/AppTheme.NoActionBar"
     tools:context=".views.user_auth.UserAuthActivity">
 
+    <FrameLayout
+        android:id="@+id/frameLayout2"
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@color/colorPrimaryDark"
+        app:layout_constraintBottom_toTopOf="@+id/google_signin_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/frameLayout22"
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorPrimaryDark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView13">
+
+    </FrameLayout>
+
     <Button
         android:id="@+id/ananoymous_sign_in_btn"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="32dp"
         android:background="@drawable/add_entry_btn_background"
         android:drawablePadding="8dp"
         android:drawableRight="@drawable/ic_right_arrow"
-        android:text="Continue as Anonymous"
-        android:textSize="14sp"
+        android:text="Offline mode"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@android:color/background_light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/google_signin_button"
         app:layout_constraintStart_toStartOf="@+id/google_signin_button" />
@@ -27,85 +60,22 @@
         android:id="@+id/google_signin_button"
         style="@android:style/Widget.Material.Button.Borderless.Colored"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginStart="32dp"
         android:background="@drawable/add_entry_btn_background"
         android:drawableLeft="@drawable/ic_google"
         android:drawablePadding="8dp"
         android:drawableRight="@drawable/ic_right_arrow"
         android:text="Google Signin"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/phone_login_button"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/phone_login_button"
-        app:layout_constraintTop_toBottomOf="@+id/textView11" />
-
-    <TextView
-        android:id="@+id/textView11"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:text="OR"
-        android:textColor="@color/colorPrimaryDark"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/phone_login_button" />
-
-    <EditText
-        android:id="@+id/phone_number_edit_text"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/edit_text_background"
-        android:ems="10"
-        android:hint="Type phone no. (eg +2347012334390)"
-        android:inputType="phone"
-        android:singleLine="true"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayout2" />
-
-    <Button
-        android:id="@+id/phone_login_button"
-        style="@android:style/Widget.Material.Button.Borderless.Colored"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/add_entry_btn_background"
-        android:drawablePadding="8dp"
-        android:drawableRight="@drawable/ic_right_arrow"
-        android:text="Login"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/phone_number_edit_text"
-        app:layout_constraintStart_toStartOf="@+id/phone_number_edit_text"
-        app:layout_constraintTop_toBottomOf="@+id/phone_number_edit_text" />
-
-    <TextView
-        android:id="@+id/textView12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Don't want to signin?"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@android:color/background_light"
         app:layout_constraintBottom_toTopOf="@+id/ananoymous_sign_in_btn"
-        app:layout_constraintEnd_toEndOf="@+id/ananoymous_sign_in_btn" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.2" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView13"
@@ -115,27 +85,32 @@
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
+        android:focusable="true"
         android:gravity="center"
-        android:text="PERSONAL JOURNAL"
+        android:text="MY JOURNAL"
         android:textAppearance="@style/TextAppearance.AppCompat.Display2"
         android:textColor="@color/colorPrimaryDark"
+        android:textSize="36sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:focusable="true"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <FrameLayout
-        android:id="@+id/frameLayout2"
+    <ImageView
+        android:id="@+id/imageView2"
         android:layout_width="0dp"
-        android:layout_height="16dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
-        android:background="@color/colorPrimaryDark"
+        app:layout_constraintBottom_toTopOf="@+id/google_signin_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView13">
-
-    </FrameLayout>
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout22"
+        app:srcCompat="@drawable/journal_image" />
 
 </android.support.constraint.ConstraintLayout>

@@ -85,7 +85,7 @@ public class JournalEntryFirebaseDB implements Entry.Repository {
         ref.addValueEventListener(singleValueEventListener);
     }
 
-    @Override
+    /*@Override
     public void setupFirebaseChildEventListeners(final Entry.JournalEntriesFetchListener listener) {
 
         if (childEventListener == null) {
@@ -145,7 +145,7 @@ public class JournalEntryFirebaseDB implements Entry.Repository {
 
             ref.addChildEventListener(childEventListener);
         }
-    }
+    }*/
 
     @Override
     public void addJournalEntry(JournalEntry entry, AddEntry.AddEntryListener listener) {

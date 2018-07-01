@@ -4,6 +4,7 @@ package ng.com.oga_emma.journalapplication.views.entry_list;
 import android.app.Activity;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import ng.com.oga_emma.journalapplication.MainActivity;
@@ -40,10 +42,11 @@ import ng.com.oga_emma.journalapplication.model.JournalEntry;
 import ng.com.oga_emma.journalapplication.model.JournalEntryRoom;
 import ng.com.oga_emma.journalapplication.utils.SetNameDialogFragment;
 import ng.com.oga_emma.journalapplication.utils.SharePreferenceKeys;
+import ng.com.oga_emma.journalapplication.viewmodel.JournalEntryFirebaseViewModel;
+import ng.com.oga_emma.journalapplication.viewmodel.JournalEntryViewModel;
 import ng.com.oga_emma.journalapplication.views.add_and_edit_entry.AddEditEntryActivity;
 
-public class JournalEntriesFragment extends Fragment implements Entry.EntryInteractionListener,
-        Observer<List<JournalEntryRoom>>, Entry.JournalEntriesFetchListener, Entry.JournalEntriesFetchOnceListener {
+public class JournalEntriesFragment extends Fragment implements Entry.EntryInteractionListener {
 
     private static final String TAG = JournalEntriesFragment.class.getSimpleName();
 
@@ -57,7 +60,8 @@ public class JournalEntriesFragment extends Fragment implements Entry.EntryInter
     private EntryAdapter adapter;
 
     private ConstraintLayout titleLayout;
-    private TextView displayNameTextView, dateTextView, weekTextView, entryCountTextView;
+    private TextView displayNameTextView, dateTextView,
+            weekTextView, entryCountTextView;
 
     private JounalEntryLocalStroage entryLocalDB;
     private static JournalEntryFirebaseDB entryFirebaseDB = null;
@@ -66,8 +70,6 @@ public class JournalEntriesFragment extends Fragment implements Entry.EntryInter
     private LinearLayout loadingLayout;
 
     LiveData<List<JournalEntryRoom>> entries;
-    @Nullable
-    private List<JournalEntryRoom> journalEntryRoomList;
 
     public JournalEntriesFragment() {
         // Required empty public constructor
@@ -83,7 +85,6 @@ public class JournalEntriesFragment extends Fragment implements Entry.EntryInter
         return fragment;
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -96,10 +97,10 @@ public class JournalEntriesFragment extends Fragment implements Entry.EntryInter
         if(auth.getCurrentUser() != null && !auth.getCurrentUser().getUid().isEmpty()) {
             Log.i("DATABASE TYPE", "firebase storage");
             entryFirebaseDB = JournalEntryFirebaseDB.getInstance(auth.getCurrentUser().getUid());
+
         }else{
             Log.i("DATABASE TYPE", "local storage ");
             entryFirebaseDB = null;
-
         }
 
         dateTextView = v.findViewById(R.id.date_text_view);
@@ -132,8 +133,8 @@ public class JournalEntriesFragment extends Fragment implements Entry.EntryInter
         setUserName();
 
         Date date = new Date();
-        SimpleDateFormat weekFormat = new SimpleDateFormat("EEEE");
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd yyyy");
+        SimpleDateFormat weekFormat = new SimpleDateFormat("EEEE", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd yyyy", Locale.getDefault());
 
         dateTextView.setText(dateFormat.format(date));
         weekTextView.setText(weekFormat.format(date));
@@ -141,6 +142,7 @@ public class JournalEntriesFragment extends Fragment implements Entry.EntryInter
         return v;
     }
 
+    //set display name of the user on successful login
     private void setUserName() {
         if(getArguments() != null) {
 
@@ -157,51 +159,98 @@ public class JournalEntriesFragment extends Fragment implements Entry.EntryInter
 
         journalEntryList.clear();
 
+        //if firebase database is available, get entries
         if(entryFirebaseDB != null){
 
             Log.i(TAG, "firebase initialized success");
 
-            entryFirebaseDB.fetchJournalEntries(this);
-            entryFirebaseDB.setupFirebaseChildEventListeners(this);
+            JournalEntryFirebaseViewModel viewModel = ViewModelProviders.of(this)
+                    .get(JournalEntryFirebaseViewModel.class);
 
+            viewModel.setOnDataFetchListener(new Entry.JournalEntriesFetchOnceListener() {
+                //handles data fetch from firebase
+                @Override
+                public void onJournalEntryFetchSuccess(Map<String, JournalEntry> entryMap) {
+                    journalEntryList.clear();
+
+                    journalEntryList.addAll(entryMap.values());
+                    refreshUi();
+                }
+
+                //handles data fetch error from firebase
+                @Override
+                public void onJournalEntryFetchFailed() {
+                    Log.i(TAG, "firebase initialized failed");
+                    Toast.makeText(getContext(), "Error fetching data, " +
+                            "please check your network and try again", Toast.LENGTH_LONG)
+                            .show();
+                }
+            });
+
+            //else user signin in as anonymous, get entries from room local database
         }else {
-            /*for(JournalEntryRoom journalEntryRoom : entryLocalDB.entryDAO().fetchAllEntries()){
-                        journalEntryList.add(new JournalEntry(journalEntryRoom));
-            }*/
 
-            entries = entryLocalDB.entryDAO().fetchAllEntries();
-            entries.observe(this, this);
+            JournalEntryViewModel viewModel = ViewModelProviders.of(this).get(JournalEntryViewModel.class);
+            entries = viewModel.getListLiveData();
+            entries.observe(this,  (journalEntryRooms) -> {
+
+                if(journalEntryRooms != null) {
+                    Log.i(TAG, "fetching data");
+
+                    journalEntryList.clear();
+
+                    for (JournalEntryRoom journalEntryRoom : journalEntryRooms) {
+                        journalEntryList.add(new JournalEntry(journalEntryRoom));
+                    }
+                }else{
+                    Log.e(TAG, "Error loading data");
+                }
+                refreshUi();
+            });
         }
 
+        //reload data
         refreshUi();
     }
 
+    //reload the ui with fresh entry data
     private void refreshUi() {
-        loadingLayout.setVisibility(View.GONE);
+        try {
+            loadingLayout.setVisibility(View.GONE);
 
-        if(journalEntryList.isEmpty())
-            noEntryMessage.setVisibility(View.VISIBLE);
-        else
-            noEntryMessage.setVisibility(View.GONE);
+            if (journalEntryList.isEmpty())
+                noEntryMessage.setVisibility(View.VISIBLE);
+            else
+                noEntryMessage.setVisibility(View.GONE);
 
-        adapter.notifyDataSetChanged();
-        entryCountTextView.setText(getString(R.string.entry_count, journalEntryList.size()));
+            adapter.notifyDataSetChanged();
+            entryCountTextView.setText(getString(R.string.entry_count, journalEntryList.size()));
+
+        }catch (Exception e){
+            Log.e(TAG, e.getMessage(), e);
+        }
     }
 
+
+    //handle entry clicked events from recycler view
     @Override
     public void onEntryClicked(JournalEntry entry) {
 
         JournalEntryRoom entryTemp =
                 new JournalEntryRoom(entry.getEntryTitle(), entry.getEntryBody(), new Date(entry.getEntryDate()));
-        entryTemp.setEntryId(entry.getUUID());
 
-//        Toast.makeText(getContext(),  "Entry clicked", Toast.LENGTH_SHORT).show();
+        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+            entryTemp.setEntryId(entry.getUUID());
+        }else{
+            entryTemp.setId(Integer.parseInt(entry.getUUID()));
+        }
+
         AddEditEntryActivity.launchActivity(getActivity(), entryTemp);
     }
 
+    //handles entry delete events from recycler view
     @Override
     public void onEntryDeleted(JournalEntry entry) {
-//        Toast.makeText(getContext(),  "Delete clicked", Toast.LENGTH_SHORT).show();
         journalEntryList.remove(entry);
 
         if(entryFirebaseDB != null){
@@ -235,55 +284,6 @@ public class JournalEntriesFragment extends Fragment implements Entry.EntryInter
                 Toast.makeText(getContext(), "Error removing entry", Toast.LENGTH_SHORT).show();
             }
         }
-
-    }
-
-    @Override
-    public void onChanged(@Nullable List<JournalEntryRoom> journalEntryRooms) {
-        journalEntryRoomList = journalEntryRooms;
-        journalEntryList.clear();
-
-        for(JournalEntryRoom journalEntryRoom : journalEntryRooms){
-            journalEntryList.add(new JournalEntry(journalEntryRoom));
-        }
-
-        refreshUi();
-    }
-
-    @Override
-    public void onJournalEntryAdded(JournalEntry entry) {
-        journalEntryList.add(0, entry);
-        refreshUi();
-    }
-
-    @Override
-    public void onJournalEntryModified(JournalEntry entry, String positionOnLise) {
-        if(journalEntryList.contains(entry)) {
-            journalEntryList.remove(entry);
-            journalEntryList.add(entry);
-        }
-
-        refreshUi();
-    }
-
-    @Override
-    public void onJournalEntryRemoved(JournalEntry entry, String positionOnLise) {
-        journalEntryList.remove(entry);
-        refreshUi();
-    }
-
-    @Override
-    public void onJournalEntryFetchSuccess(Map<String, JournalEntry> entryMap) {
-        journalEntryList.clear();
-
-        journalEntryList.addAll(entryMap.values());
-        refreshUi();
-    }
-
-    @Override
-    public void onJournalEntryFetchFailed() {
-
-        Log.i(TAG, "firebase initialized failed");
     }
 
     @Override
@@ -292,15 +292,6 @@ public class JournalEntriesFragment extends Fragment implements Entry.EntryInter
 
         retrieveEntries();
         refreshUi();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        if(entryFirebaseDB != null){
-            entryFirebaseDB.clearListeners();
-        }
     }
 
     @Override

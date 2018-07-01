@@ -19,6 +19,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 import ng.com.oga_emma.journalapplication.utils.SharePreferenceKeys;
 import ng.com.oga_emma.journalapplication.views.add_and_edit_entry.AddEditEntryActivity;
@@ -56,7 +57,8 @@ public class MainActivity extends AppCompatActivity{
 
         boolean newSignIn = false;
 
-        initFirebase();
+        mAuth = FirebaseAuth.getInstance();
+        if(mAuth.getCurrentUser() != null) initFirebase();
 
         signinOutDialog = new ProgressDialog(this);
         signinOutDialog.setCancelable(false);
@@ -72,6 +74,9 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void initFirebase() {
+
+        //for offline data persisitence
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -79,7 +84,6 @@ public class MainActivity extends AppCompatActivity{
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        mAuth = FirebaseAuth.getInstance();
     }
 
     private void setupFAB() {

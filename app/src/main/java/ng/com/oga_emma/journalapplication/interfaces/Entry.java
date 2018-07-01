@@ -26,7 +26,7 @@ public interface Entry {
     }
 
     interface Repository{
-        void setupFirebaseChildEventListeners(JournalEntriesFetchListener listener);
+//        void setupFirebaseChildEventListeners(JournalEntriesFetchListener listener);
         void fetchJournalEntries(JournalEntriesFetchOnceListener listener);
         void addJournalEntry(JournalEntry entry, AddEntry.AddEntryListener listener);
         void updateJournalEntry(JournalEntry entry, AddEntry.UpdateEntryListener listener);
